@@ -1,0 +1,36 @@
+basePath: /
+definitions:
+  queue.Queue:
+    properties:
+      go_to_queue:
+        type: string
+    required:
+    - go_to_queue
+    type: object
+info:
+  contact: {}
+  title: queue
+paths:
+  /enqueue:
+    post:
+      consumes:
+      - application/json
+      description: 큐 삽입
+      parameters:
+      - description: 데이터
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/queue.Queue'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      summary: queue
+      tags:
+      - queue
+swagger: "2.0"

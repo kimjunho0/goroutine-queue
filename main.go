@@ -9,7 +9,6 @@ import (
 	"queue/database"
 	"queue/docs"
 	"queue/queue"
-	"queue/tools"
 	"time"
 )
 
@@ -42,5 +41,8 @@ func main() {
 		}
 	}()
 
-	tools.WaitForShutdown(srv)
+	//차단 해놓기 (close(loop) 하기 전까지)
+	loop := make(chan bool, 1)
+
+	<-loop
 }

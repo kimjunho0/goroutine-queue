@@ -30,12 +30,12 @@ func Enqueue(c *gin.Context) {
 	if err := c.ShouldBind(&body); err != nil {
 		panic(err)
 	}
-
+	//swagger 연결시켜서 channel 로 전달
 	qChannel <- body.GoToQueue
 }
 
 func DeQueue() {
-
+	//goroutine 으로 함수 실행 시켜서 for 로 계속 돌림 & channel 에 들어오는 순서대로 변수 v에 찍힘
 	for v := range qChannel {
 		time.Sleep(time.Second * 10)
 		if err := database.DB.Create(&models.Queue{

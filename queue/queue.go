@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"queue/database"
 	"queue/models"
-	"sync"
 	"time"
 )
 
@@ -12,9 +11,7 @@ type Queue struct {
 	GoToQueue string `json:"go_to_queue" binding:"required"`
 }
 
-var qChannel = make(chan string, 100)
-
-var Wg = sync.WaitGroup{}
+var qChannel = make(chan string, 5)
 
 // @tags queue
 // @Summary queue
@@ -30,8 +27,13 @@ func Enqueue(c *gin.Context) {
 	if err := c.ShouldBind(&body); err != nil {
 		panic(err)
 	}
-	//swagger 연결시켜서 channel 로 전달
-	qChannel <- body.GoToQueue
+	select {
+	case qChannel <- body.GoToQueue:
+		c.JSON(200, "성공")
+	default:
+		c.JSON(400, "채널 가득 참")
+	}
+
 }
 
 func DeQueue() {
